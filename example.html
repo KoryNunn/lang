@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<script src="lang.js"></script>
+		<script src="example.js"></script>
+	</head>
+	<body>
+		<h1>Shift + Enter to run the code.</h1>
+		<div>Simple math syntax</div>
+		<textarea id="codebox">
+
+		</textarea>
+		<div id="output">
+
+		</div>
+		<script type="text/javascript">
+			var codebox = document.getElementById('codebox'),
+				outputArea = document.getElementById('output'),
+				ample = new Ample();
+
+			codebox.addEventListener('keypress', function(event){
+				if(event.shiftKey && event.which === 13){
+					event.preventDefault();
+					outputArea.innerText = ample.evaluate(codebox.value);
+				}
+			});
+		</script>
+	</body>
+</html>

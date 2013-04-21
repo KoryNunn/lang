@@ -310,7 +310,15 @@
                 lastToken;
 
             if(!(scope instanceof Scope)){
+                var injectedScope = scope;
+
+                scope = new Scope();
+
                 scope.add(injectedScope);
+            }
+
+            if(Array.isArray(expression)){
+                return evaluate(expression , scope).slice(-1).pop();
             }
 
             if(memoisedExpressions[memoiseKey]){
@@ -320,6 +328,7 @@
                 
                 memoisedExpressions[memoiseKey] = expressionTree;
             }
+            
             
             var startTime = new Date();
             evaluatedTokens = evaluate(expressionTree , scope);
