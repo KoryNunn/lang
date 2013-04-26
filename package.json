@@ -1,0 +1,21 @@
+{
+  "name": "lang",
+  "description": "A library for implementing custom in-js languages in",
+  "author": "Kory Nunn <knunn187@gmail.com>",
+  "tags": [
+    "language"
+  ],
+  "version": "0.0.1",
+  "main": "lang.js",
+  "dependencies": {},
+  "devDependencies": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/KoryNunn/lang.git"
+  },
+  "bugs": {
+    "url": "http://github.com/KoryNunn/lang/issues"
+  },
+  "contributors": []
+}

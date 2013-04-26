@@ -14,28 +14,9 @@
         }
     }
 
-    function tokeniseIdentifier(substring){
-        // searches for valid identifiers or operators
-        //operators
-        var operators = "!=<>/&|*%-^?+\\",
-            index = 0;
-            
-        while (operators.indexOf(substring.charAt(index)||null) >= 0 && ++index) {}
-
-        if (index > 0) {
-            return substring.slice(0, index);
-        }
-
-        var identifier = isIdentifier(substring);
-
-        if(identifier != null){
-            return identifier;                        
-        }
-    }
-
     function createKeywordTokeniser(keyword){
         return function(substring){
-            substring = tokeniseIdentifier(substring);
+            substring = isIdentifier(substring);
             if (substring === keyword) {
                 return new Token(this, substring, substring.length);
             }
@@ -58,31 +39,6 @@
                     }
 
                     this.result = this.childTokens.slice(-1)[0].result;
-                }
-            },
-            {
-                name:"period",
-                precedence: 1,
-                tokenise: function (substring) {
-                    var opperatorConst = ".";
-                    if (substring.charAt(0) === opperatorConst) return new Token(this, opperatorConst, 1);
-                    return;
-                },
-                parse: function(tokens, position){
-                    this.targetToken = tokens.splice(position-1,1)[0];
-                    this.identifierToken = tokens.splice(position,1)[0];
-                },
-                evaluate:function(scope){
-                    this.targetToken.evaluate(scope);
-                    if(
-                        this.targetToken.result &&
-                        (typeof this.targetToken.result === 'object' || typeof this.targetToken.result === 'function')
-                        && this.targetToken.result.hasOwnProperty(this.identifierToken.original)
-                    ){
-                        this.result = this.targetToken.result[this.identifierToken.original];
-                    }else{
-                        this.result = undefined;
-                    }
                 }
             },
             {
@@ -229,7 +185,7 @@
                 name:"identifier",
                 precedence: 6,
                 tokenise: function(substring){
-                    var result = tokeniseIdentifier(substring);
+                    var result = isIdentifier(substring);
 
                     if(result != null){
                         return new Token(this, result, result.length);
@@ -239,8 +195,7 @@
                     this.result = scope.get(this.original);
                 }
             }
-        ],
-        scope = {};
+        ];
 
     
     global.Ample = function(){    
@@ -249,17 +204,15 @@
             
         ample.lang = lang;
         ample.tokenise = function(expression){
-            return ample.lang.tokenise(expression, this.tokenConverters);
+            return ample.lang.tokenise(expression, tokenConverters);
         }
         ample.evaluate = function(expression, injectedScope, returnAsTokens){
             var scope = new Lang.Scope();
 
-            scope.add(this.scope).add(injectedScope);
+            scope.add(injectedScope);
 
-            return lang.evaluate(expression, scope, this.tokenConverters, returnAsTokens);
+            return lang.evaluate(expression, scope, tokenConverters, returnAsTokens);
         };
-        ample.tokenConverters = tokenConverters.slice();
-        ample.scope = {__proto__:scope};
         
         return ample;
     };

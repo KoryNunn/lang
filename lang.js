@@ -1,18 +1,25 @@
-(function(global, undefined){
-
+(function (root, factory) {
+    if(typeof exports === 'object'){
+        module.exports = factory();
+    }else if(typeof define === 'function' && define.amd){
+        define(factory);
+    }else{
+        root.Lang = factory();
+    }
+}(this, function () {
     function fastEach(items, callback) {
         for (var i = 0; i < items.length; i++) {
             if (callback(items[i], i, items)) break;
         }
         return items;
     }
-    
+
     function Token(converter, substring, characters){
         simpleExtend(this, converter);
         this.original = substring;
         this.length = characters;
     }
-    
+
     function simpleExtend(target, source){
         for(var key in source){
             if(source.hasOwnProperty(key)){
@@ -20,7 +27,7 @@
             }
         }
     }
-    
+
     function callWith(fn, fnArguments, calledToken){
         var argIndex = 0,
             scope = this,
@@ -93,7 +100,7 @@
         return this;
     };
     Scope.prototype.callWith = callWith;
-    
+
     // Takes a start and end regex, returns an appropriate parse function
     function createNestingParser(openRegex, closeRegex){
         return function(tokens, index){
@@ -155,7 +162,7 @@
             );
         }
     }
-    
+
     function scanForToken(tokenisers, expression){
         for (var i = 0; i < tokenisers.length; i++) {
             var token = tokenisers[i].tokenise(expression);
@@ -237,7 +244,7 @@
         
         return parse(tokens);
     }
-    
+
     function evaluate(tokens, scope){        
         scope = scope || new Scope();
         for(var i = 0; i < tokens.length; i++){
@@ -277,8 +284,8 @@
             ].join(''));
         });
     }
-    
-    global.Lang = function(){    
+
+    function Lang(){    
         var lang = {},
             memoisedTokens = {},
             memoisedExpressions = {};
@@ -354,5 +361,6 @@
     Lang.detectString = detectString;
     Lang.Scope = Scope;
     Lang.Token = Token;
-    
-})(this);
+
+    return Lang;
+}));
