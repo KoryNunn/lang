@@ -1,5 +1,5 @@
 {
-  "name": "lang",
+  "name": "lang-js",
   "description": "A library for implementing custom in-js languages in",
   "author": "Kory Nunn <knunn187@gmail.com>",
   "tags": [
