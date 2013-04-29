@@ -9,6 +9,7 @@
   "main": "lang.js",
   "dependencies": {},
   "devDependencies": {
+    "tape": "~0.0.4"
   },
   "repository": {
     "type": "git",
@@ -16,6 +17,9 @@
   },
   "bugs": {
     "url": "http://github.com/KoryNunn/lang/issues"
+  },
+  "scripts":{
+    "test":"node ./test/test.js"
   },
   "contributors": []
 }

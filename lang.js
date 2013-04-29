@@ -85,11 +85,23 @@
     }
     Scope.prototype.get = function(key){
         if(key in this.__scope__){
-            return this.__scope__[key];
+            if(this.hasOwnProperty(key)){
+                return this.__scope__[key];
+            }
         }
         return this.__outerScope__ && this.__outerScope__.get(key);
     };
-    Scope.prototype.set = function(key, value){
+    Scope.prototype.set = function(key, value, bubble){
+        if(bubble){
+            var currentScope = this;
+            while(currentScope && !(key in currentScope.__scope__)){
+                currentScope = currentScope.__outerScope__;
+            }
+
+            if(currentScope){
+                currentScope.set(key, value);
+            }
+        }
         this.__scope__[key] = value;
         return this;
     };
@@ -98,6 +110,18 @@
             this.__scope__[key] = obj[key];
         }
         return this;
+    };
+    Scope.prototype.isDefined = function(key){
+        console.log("--->" + key);
+
+        for(var key in this.__scope__){
+            console.log("--->" + key + " : " + this.__scope__[key]);
+        }
+
+        if(key in this.__scope__){
+            return true;
+        }
+        return this.__outerScope__ && this.__outerScope__.get(key) || false;
     };
     Scope.prototype.callWith = callWith;
 
