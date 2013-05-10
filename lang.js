@@ -85,7 +85,7 @@
     }
     Scope.prototype.get = function(key){
         if(key in this.__scope__){
-            if(this.hasOwnProperty(key)){
+            if(this.__scope__.hasOwnProperty(key)){
                 return this.__scope__[key];
             }
         }
