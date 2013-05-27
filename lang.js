@@ -292,7 +292,7 @@
 
         allStats.sort(function(stat1, stat2){
             return stat2.time - stat1.time;
-        }).slice(-10).forEach(function(stat){
+        }).slice(0, 10).forEach(function(stat){
             console.log([
                 "Expression: ",
                 stat.expression,
