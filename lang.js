@@ -19,6 +19,9 @@
         this.original = substring;
         this.length = characters;
     }
+    Token.prototype.valueOf = function(){
+        return this.result;
+    }
 
     function simpleExtend(target, source){
         for(var key in source){
@@ -44,6 +47,16 @@
                         });
                     }
                     return rawArgs;
+                },
+                getRaw: function(index, evaluated){
+                    var arg = fnArguments[index];
+
+                    if(evaluated){
+                        if(arg instanceof Token){
+                            arg.evaluate(scope);
+                        }
+                    }
+                    return arg;
                 },
                 get: function(index){
                     var arg = fnArguments[index];
