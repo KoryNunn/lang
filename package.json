@@ -1,25 +1,27 @@
 {
-  "name": "lang-js",
-  "description": "A library for implementing custom in-js languages in",
-  "author": "Kory Nunn <knunn187@gmail.com>",
-  "tags": [
-    "language"
-  ],
-  "version": "0.0.5",
-  "main": "lang.js",
-  "dependencies": {},
-  "devDependencies": {
-    "tape": "~0.0.4"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/KoryNunn/lang.git"
-  },
-  "bugs": {
-    "url": "http://github.com/KoryNunn/lang/issues"
-  },
-  "scripts":{
-    "test":"node ./test/test.js"
-  },
-  "contributors": []
+    "name": "lang-js",
+    "description": "A library for implementing custom in-js languages in",
+    "author": "Kory Nunn <knunn187@gmail.com>",
+    "tags": [
+        "language"
+    ],
+    "version": "0.1.0",
+    "main": "lang.js",
+    "dependencies": {
+        "spec-js":"0.0.x"
+    },
+    "devDependencies": {
+        "tape": "~0.0.4"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/KoryNunn/lang.git"
+    },
+    "bugs": {
+        "url": "http://github.com/KoryNunn/lang/issues"
+    },
+    "scripts":{
+        "test":"node ./test/test.js"
+    },
+    "contributors": []
 }
