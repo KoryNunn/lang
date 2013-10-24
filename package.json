@@ -1,27 +1,34 @@
 {
-    "name": "lang-js",
-    "description": "A library for implementing custom in-js languages in",
-    "author": "Kory Nunn <knunn187@gmail.com>",
-    "tags": [
-        "language"
-    ],
-    "version": "0.1.0",
-    "main": "lang.js",
-    "dependencies": {
-        "spec-js":"0.0.x"
-    },
-    "devDependencies": {
-        "tape": "~0.0.4"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/KoryNunn/lang.git"
-    },
-    "bugs": {
-        "url": "http://github.com/KoryNunn/lang/issues"
-    },
-    "scripts":{
-        "test":"node ./test/test.js"
-    },
-    "contributors": []
+  "name": "lang-js",
+  "description": "A library for implementing custom in-js languages in",
+  "author": {
+    "name": "Kory Nunn",
+    "email": "knunn187@gmail.com"
+  },
+  "tags": [
+    "language"
+  ],
+  "version": "0.1.0",
+  "main": "lang.js",
+  "dependencies": {
+    "spec-js": "0.0.x"
+  },
+  "devDependencies": {
+    "tape": "~0.0.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/KoryNunn/lang.git"
+  },
+  "bugs": {
+    "url": "http://github.com/KoryNunn/lang/issues"
+  },
+  "scripts": {
+    "test": "node ./test/test.js"
+  },
+  "contributors": [],
+  "readme": "lang\r\n====\r\n\r\nA small library for implementing custom languages in.\r\n\r\nOne might call it a script host if one wasn't sure what to call it...",
+  "readmeFilename": "README.md",
+  "_id": "lang-js@0.1.0",
+  "_from": "lang-js@0.1.x"
 }

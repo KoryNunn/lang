@@ -36,7 +36,7 @@ function callWith(fn, fnArguments, calledToken){
             },
             get: function(index){
                 var arg = fnArguments[index];
-                    
+
                 if(arg instanceof Token){
                     arg.evaluate(scope);
                     return arg.result;
@@ -64,7 +64,7 @@ function callWith(fn, fnArguments, calledToken){
                 return allArgs;
             }
         };
-        
+
     return fn(scope, args);
 }
 
@@ -73,12 +73,11 @@ function Scope(oldScope){
     this.__outerScope__ = oldScope;
 }
 Scope.prototype.get = function(key){
-    if(key in this.__scope__){
-        if(this.__scope__.hasOwnProperty(key)){
-            return this.__scope__[key];
-        }
+    var scope = this;
+    while(scope && !scope.__scope__.hasOwnProperty(key)){
+        scope = scope.__outerScope__;
     }
-    return this.__outerScope__ && this.__outerScope__.get(key);
+    return scope && scope.__scope__[key];
 };
 Scope.prototype.set = function(key, value, bubble){
     if(bubble){
@@ -114,7 +113,7 @@ function createNestingParser(openRegex, closeRegex){
         if(this.original.match(openRegex)){
             var position = index,
                 opens = 1;
-                
+
             while(position++, position <= tokens.length && opens){
                 if(!tokens[position]){
                     throw "Invalid nesting. No closing token was found matching " + closeRegex.toString();
@@ -135,7 +134,7 @@ function createNestingParser(openRegex, closeRegex){
 
             // parse them, then add them as child tokens.
             this.childTokens = parse(childTokens);
-            
+
             //Remove nesting end token
         }else{
             // If a nesting end token is found during parsing,
@@ -149,7 +148,7 @@ function createNestingParser(openRegex, closeRegex){
 function scanForToken(tokenisers, expression){
     for (var i = 0; i < tokenisers.length; i++) {
         var token = tokenisers[i].tokenise(expression);
-        if (token) {                
+        if (token) {
             return token;
         }
     }
@@ -166,41 +165,41 @@ function tokenise(expression, tokenConverters, memoisedTokens) {
     if(!expression){
         return [];
     }
-    
+
     if(memoisedTokens && memoisedTokens[expression]){
         return memoisedTokens[expression].slice();
     }
 
     tokenConverters = sortByPrecedence(tokenConverters);
-    
+
     var originalExpression = expression,
         tokens = [],
         totalCharsProcessed = 0,
         previousLength,
         reservedKeywordToken;
-    
+
     do {
         previousLength = expression.length;
-        
+
         var token;
 
         token = scanForToken(tokenConverters, expression);
-        
+
         if(token){
             expression = expression.slice(token.length);
-            totalCharsProcessed += token.length;                    
+            totalCharsProcessed += token.length;
             tokens.push(token);
             continue;
         }
-        
+
         if(expression.length === previousLength){
             throw "Unable to determine next token in expression: " + expression;
         }
-        
+
     } while (expression);
-    
+
     memoisedTokens && (memoisedTokens[originalExpression] = tokens.slice());
-    
+
     return tokens;
 }
 
@@ -224,17 +223,17 @@ function parse(tokens){
 
     // Even if the token has no parse method, it is still concidered 'parsed' at this point.
     currentToken.parsed = true;
-    
+
     return parse(tokens);
 }
 
-function evaluate(tokens, scope){        
+function evaluate(tokens, scope){
     scope = scope || new Scope();
     for(var i = 0; i < tokens.length; i++){
         var token = tokens[i];
         token.evaluate(scope);
     }
-    
+
     return tokens;
 }
 
@@ -262,13 +261,13 @@ function printTopExpressions(stats){
             'Total time: ',
             stat.time,
             '\n',
-            'Call count: ',                    
+            'Call count: ',
             stat.calls
         ].join(''));
     });
 }
 
-function Lang(){    
+function Lang(){
     var lang = {},
         memoisedTokens = {},
         memoisedExpressions = {};
@@ -313,29 +312,29 @@ function Lang(){
 
         if(memoisedExpressions[memoiseKey]){
             expressionTree = memoisedExpressions[memoiseKey].slice();
-        } else{            
+        } else{
             expressionTree = langInstance.parse(langInstance.tokenise(expression, tokenConverters, memoisedTokens));
-            
+
             memoisedExpressions[memoiseKey] = expressionTree;
         }
-        
-        
+
+
         var startTime = new Date();
         evaluatedTokens = evaluate(expressionTree , scope);
         addStat({
             expression: expression,
             time: new Date() - startTime
         });
-        
+
         if(returnAsTokens){
             return evaluatedTokens.slice();
         }
-            
+
         lastToken = evaluatedTokens.slice(-1).pop();
-        
+
         return lastToken && lastToken.result;
     };
-    
+
     lang.callWith = callWith;
     return lang;
 };
