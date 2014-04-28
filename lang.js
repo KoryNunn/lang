@@ -156,7 +156,7 @@ function scanForToken(tokenisers, expression){
 
 function sortByPrecedence(items){
     return items.slice().sort(function(a,b){
-        var precedenceDifference = a.precedence - b.precedence;
+        var precedenceDifference = (a.precedence || a.prototype && a.prototype.precedence) - (b.precedence || b.prototype && b.prototype.precedence);
         return precedenceDifference ? precedenceDifference : items.indexOf(a) - items.indexOf(b);
     });
 }
