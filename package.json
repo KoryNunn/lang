@@ -8,7 +8,7 @@
   "tags": [
     "language"
   ],
-  "version": "0.1.2",
+  "version": "1.0.0",
   "main": "lang.js",
   "dependencies": {
     "spec-js": "0.0.x"
