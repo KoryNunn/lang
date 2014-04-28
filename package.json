@@ -14,7 +14,7 @@
     "spec-js": "0.0.x"
   },
   "devDependencies": {
-    "tape": "~0.0.4"
+    "tape": "x.x.x"
   },
   "repository": {
     "type": "git",

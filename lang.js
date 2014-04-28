@@ -154,9 +154,9 @@ function scanForToken(tokenisers, expression){
     }
 }
 
-function sortByPrecedence(items){
+function sortByPrecedence(items, key){
     return items.slice().sort(function(a,b){
-        var precedenceDifference = (a.precedence || a.prototype && a.prototype.precedence) - (b.precedence || b.prototype && b.prototype.precedence);
+        var precedenceDifference = a[key] - b[key];
         return precedenceDifference ? precedenceDifference : items.indexOf(a) - items.indexOf(b);
     });
 }
@@ -170,7 +170,7 @@ function tokenise(expression, tokenConverters, memoisedTokens) {
         return memoisedTokens[expression].slice();
     }
 
-    tokenConverters = sortByPrecedence(tokenConverters);
+    tokenConverters = sortByPrecedence(tokenConverters, 'tokenPrecedence');
 
     var originalExpression = expression,
         tokens = [],
@@ -205,7 +205,7 @@ function tokenise(expression, tokenConverters, memoisedTokens) {
 
 function parse(tokens){
     var parsedTokens = 0,
-        tokensByPrecedence = sortByPrecedence(tokens),
+        tokensByPrecedence = sortByPrecedence(tokens, 'parsePrecedence'),
         currentToken = tokensByPrecedence[0],
         tokenNumber = 0;
 
