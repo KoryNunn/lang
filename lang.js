@@ -218,7 +218,7 @@ function parse(tokens){
     }
 
     if(currentToken.parse){
-        currentToken.parse(tokens, tokens.indexOf(currentToken));
+        currentToken.parse(tokens, tokens.indexOf(currentToken), parse);
     }
 
     // Even if the token has no parse method, it is still concidered 'parsed' at this point.
