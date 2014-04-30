@@ -1,4 +1,4 @@
-var Token = require('./src/token');
+var Token = require('./token');
 
 function fastEach(items, callback) {
     for (var i = 0; i < items.length; i++) {
@@ -7,7 +7,32 @@ function fastEach(items, callback) {
     return items;
 }
 
+var now;
+
+if(typeof process !== 'undefined' && process.hrtime){
+    now = function(){
+        var time = process.hrtime();
+        return time[0] + time[1] / 1000000;
+    };
+}else if(typeof performance !== 'undefined' && performance.now){
+    now = function(){
+        return performance.now();
+    };
+}else if(Date.now){
+    now = function(){
+        return Date.now();
+    };
+}else{
+    now = function(){
+        return new Date().getTime();
+    };
+}
+
 function callWith(fn, fnArguments, calledToken){
+    if(fn instanceof Token){
+        fn.evaluate(scope);
+        fn = fn.result;
+    }
     var argIndex = 0,
         scope = this,
         args = {
@@ -108,40 +133,32 @@ Scope.prototype.isDefined = function(key){
 Scope.prototype.callWith = callWith;
 
 // Takes a start and end regex, returns an appropriate parse function
-function createNestingParser(openRegex, closeRegex){
-    return function(tokens, index){
-        if(this.original.match(openRegex)){
-            var position = index,
-                opens = 1;
+function createNestingParser(closeConstructor){
+    return function(tokens, index, parse){
+        var openConstructor = this.constructor,
+            position = index,
+            opens = 1;
 
-            while(position++, position <= tokens.length && opens){
-                if(!tokens[position]){
-                    throw "Invalid nesting. No closing token was found matching " + closeRegex.toString();
-                }
-                if(tokens[position].original.match(openRegex)){
-                    opens++;
-                }
-                if(tokens[position].original.match(closeRegex)){
-                    opens--;
-                }
+        while(position++, position <= tokens.length && opens){
+            if(!tokens[position]){
+                throw "Invalid nesting. No closing token was found matching " + closeRegex.toString();
             }
-
-            // remove all wrapped tokens from the token array, including nest end token.
-            var childTokens = tokens.splice(index + 1, position - 1 - index);
-
-            // Remove the nest end token.
-            childTokens.pop();
-
-            // parse them, then add them as child tokens.
-            this.childTokens = parse(childTokens);
-
-            //Remove nesting end token
-        }else{
-            // If a nesting end token is found during parsing,
-            // there is invalid nesting,
-            // because the opening token should remove its closing token.
-            throw "Invalid nesting. No opening token was found matching " + openRegex.toString();
+            if(tokens[position] instanceof openConstructor){
+                opens++;
+            }
+            if(tokens[position] instanceof closeConstructor){
+                opens--;
+            }
         }
+
+        // remove all wrapped tokens from the token array, including nest end token.
+        var childTokens = tokens.splice(index + 1, position - 1 - index);
+
+        // Remove the nest end token.
+        childTokens.pop();
+
+        // parse them, then add them as child tokens.
+        this.childTokens = parse(childTokens);
     };
 }
 
@@ -319,11 +336,11 @@ function Lang(){
         }
 
 
-        var startTime = new Date();
+        var startTime = now();
         evaluatedTokens = evaluate(expressionTree , scope);
         addStat({
             expression: expression,
-            time: new Date() - startTime
+            time: now() - startTime
         });
 
         if(returnAsTokens){
