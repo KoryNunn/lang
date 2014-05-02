@@ -141,7 +141,7 @@ function createNestingParser(closeConstructor){
 
         while(position++, position <= tokens.length && opens){
             if(!tokens[position]){
-                throw "Invalid nesting. No closing token was found matching " + closeRegex.toString();
+                throw "Invalid nesting. No closing token was found";
             }
             if(tokens[position] instanceof openConstructor){
                 opens++;
