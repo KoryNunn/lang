@@ -95,7 +95,9 @@ function callWith(fn, fnArguments, calledToken){
 
 function Scope(oldScope){
     this.__scope__ = {};
-    this.__outerScope__ = oldScope;
+    if(oldScope){
+        this.__outerScope__ = oldScope instanceof Scope ? oldScope : {__scope__:oldScope};
+    }
 }
 Scope.prototype.get = function(key){
     var scope = this;
@@ -316,11 +318,7 @@ function Lang(){
             lastToken;
 
         if(!(scope instanceof Scope)){
-            var injectedScope = scope;
-
-            scope = new Scope();
-
-            scope.add(injectedScope);
+            scope = new Scope(scope);
         }
 
         if(Array.isArray(expression)){
