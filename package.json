@@ -11,7 +11,7 @@
   "version": "2.2.0",
   "main": "lang.js",
   "dependencies": {
-    "spec-js": "0.0.x"
+    "spec-js": "^1.0.0"
   },
   "devDependencies": {
     "tape": "x.x.x"
